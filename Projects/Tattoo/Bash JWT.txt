@@ -1,0 +1,2 @@
+# Decode JWT payload (just for fun - shows the email)
+echo "$TOKEN" | cut -d. -f2 | base64 -d 2>/dev/null

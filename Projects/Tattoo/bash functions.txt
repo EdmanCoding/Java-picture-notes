@@ -1,0 +1,63 @@
+tattoo() {
+  local user=${1:-1}
+  local data=$2
+  
+  # Create a temp file for the response
+  local temp_file=$(mktemp)
+  
+  # Get HTTP status code and body separately
+  http_code=$(curl -s -w "%{http_code}" -H "X-User-Id:$user" \
+    -H "Content-Type:application/json" -d "$data" \
+    -o "$temp_file" \
+    http://localhost:8080/api/bookings)
+  
+  # Print status code with color
+  if [[ $http_code -ge 200 && $http_code -lt 300 ]]; then
+    echo -e "\033[32m✓ HTTP $http_code (Success)\033[0m"
+  elif [[ $http_code -ge 400 && $http_code -lt 500 ]]; then
+    echo -e "\033[33m⚠ HTTP $http_code (Client Error)\033[0m"
+  elif [[ $http_code -ge 500 ]]; then
+    echo -e "\033[31m✗ HTTP $http_code (Server Error)\033[0m"
+  else
+    echo -e "HTTP $http_code"
+  fi
+  
+  # Pretty print the JSON response
+  cat "$temp_file" | jq '.'
+  
+  # Clean up
+  rm "$temp_file"
+}
+
+# Test it
+tattoo 1 '{"sessionType":"SMALL","startTime":"2026-04-15T10:00:00"}'
+tattoo 2 '{"sessionType":"MEDIUM","startTime":"2026-04-15T12:00:00","notes":"Dragon tattoo"}'
+________________________________________________________________________________________________
+
+availability() {
+  local date=$1
+  local sessionType=$2
+  local temp=$(mktemp)
+  
+  http_code=$(curl -s -w "%{http_code}" -o "$temp" \
+    "http://localhost:8080/api/availability?date=$date&sessionType=$sessionType")
+  
+  if [[ $http_code -ge 200 && $http_code -lt 300 ]]; then
+    echo -e "\033[32m✓ HTTP $http_code (Success)\033[0m"  # 👈 Color covers whole line!
+    cat "$temp" | jq '.'
+  elif [[ $http_code -ge 400 && $http_code -lt 500 ]]; then
+    echo -e "\033[33m⚠ HTTP $http_code (Client Error)\033[0m"
+    cat "$temp" | jq '.' 2>/dev/null || cat "$temp"
+  elif [[ $http_code -ge 500 ]]; then
+    echo -e "\033[31m✗ HTTP $http_code (Server Error)\033[0m"
+    cat "$temp"
+  else
+    echo "HTTP $http_code"
+    cat "$temp"
+  fi
+  
+  rm "$temp"
+}
+
+# Test it
+availability 2026-04-15 SMALL_CONSULTATION
