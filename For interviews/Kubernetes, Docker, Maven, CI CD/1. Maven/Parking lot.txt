@@ -1,0 +1,38 @@
+CI/CD block later:
+
+1. GitLab vs Jenkins
+2. Git repository vs Maven repository vs Docker Registry
+3. .m2 local repository
+4. Nexus/Artifactory
+5. mvn verify in pipeline
+6. docker build / docker push
+7. deploy to dev/QA/staging/prod
+8. image promotion
+9. environment-specific configs
+10. rollback
+
+Порядок:
+
+1. Maven build basics
+2. Maven JAR/fat JAR/executable JAR
+3. Maven repositories short bridge:
+   .m2, install, deploy, Nexus
+
+4. Docker basics
+5. Dockerfile
+6. Docker image and registry
+7. Docker Compose
+
+8. Kubernetes core
+9. Kubernetes networking
+10. ConfigMap/Secret
+11. Deployments/rolling update
+
+12. CI/CD full picture:
+    GitLab/Jenkins
+    Maven verify/package
+    Docker build/push
+    deploy to dev/QA/staging/prod
+    promotion
+    approvals
+    rollback

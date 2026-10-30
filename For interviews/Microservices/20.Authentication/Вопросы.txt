@@ -1,0 +1,5 @@
+
+02_JWT_подпись_валидация_ключи.docx
+03_Keycloak_OAuth2_OIDC_пользовательский_flow.docx
+04_Микросервисы_и_production_security.docx
+05_Аутентификация_собеседование_QA.docx
